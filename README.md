@@ -47,6 +47,18 @@ claytube deploy
 
 ---
 
+## GitHub Pages Deployment
+
+The GitHub Actions workflow deploys `dist/` to GitHub Pages after running
+`claytube sync` and `astro build`.
+
+Repository setup:
+
+- Add `YOUTUBE_API_KEY` as a GitHub repository secret.
+- Set GitHub Pages source to `GitHub Actions` in the repository settings.
+
+---
+
 ## For Humans
 
 See:
