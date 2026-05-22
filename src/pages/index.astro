@@ -1,11 +1,200 @@
 ---
 import BaseLayout from "../layouts/BaseLayout.astro";
 import VideoCard from "../components/VideoCard.astro";
+import videosData from "../../data/videos.json";
+import type { VideosData } from "../data/types";
+
+const { videos } = videosData as VideosData;
+const [leadVideo, ...remainingVideos] = videos;
+const featuredVideos = remainingVideos.slice(0, 2);
+const latestVideos = remainingVideos.slice(2);
 ---
 
-<BaseLayout title="ClayTube">
-  <main>
-    <h1>ClayTube</h1>
-    <VideoCard title="Static video portal scaffold" />
+<BaseLayout
+  title="ClayTube"
+  description="A static-first editorial video portal generated from curated YouTube channels."
+>
+  <main class="site-shell">
+    <header class="masthead">
+      <a href="/" class="brand">ClayTube</a>
+      <p>Curated talks, lectures, and field notes.</p>
+    </header>
+
+    <section class="hero" aria-labelledby="featured-title">
+      <div class="hero-copy">
+        <p class="section-label">Featured</p>
+        <h1 id="featured-title">{leadVideo.title}</h1>
+        <a href={leadVideo.url}>Watch now</a>
+      </div>
+      <a href={leadVideo.url} class="hero-media" aria-label={`Watch ${leadVideo.title}`}>
+        <img src={leadVideo.thumbnail} alt="" />
+      </a>
+    </section>
+
+    <section class="editorial-grid" aria-label="Selected videos">
+      {
+        featuredVideos.map((video) => (
+          <VideoCard video={video} />
+        ))
+      }
+    </section>
+
+    <section class="latest" aria-labelledby="latest-title">
+      <div class="section-heading">
+        <p class="section-label">Latest</p>
+        <h2 id="latest-title">Recently added</h2>
+      </div>
+      <div class="latest-list">
+        {
+          latestVideos.map((video) => (
+            <VideoCard video={video} variant="compact" />
+          ))
+        }
+      </div>
+    </section>
   </main>
 </BaseLayout>
+
+<style>
+  .site-shell {
+    width: min(100% - 2rem, 1180px);
+    margin: 0 auto;
+    padding: 1.5rem 0 4rem;
+  }
+
+  .masthead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.75rem 0 1.5rem;
+    border-bottom: 1px solid #d8d0c7;
+  }
+
+  .brand {
+    color: #171412;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .masthead p,
+  .section-label {
+    margin: 0;
+    color: #77706a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.9fr) minmax(0, 1.6fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: end;
+    padding: clamp(2.5rem, 7vw, 6rem) 0 clamp(2rem, 5vw, 4rem);
+  }
+
+  .hero-copy {
+    display: grid;
+    gap: 1rem;
+    padding-bottom: 0.5rem;
+  }
+
+  h1 {
+    margin: 0;
+    max-width: 11ch;
+    color: #171412;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(3.1rem, 8vw, 7.4rem);
+    font-weight: 500;
+    line-height: 0.92;
+  }
+
+  .hero-copy a {
+    width: fit-content;
+    color: #171412;
+    font-weight: 800;
+    text-decoration: none;
+    border-bottom: 2px solid #d71920;
+  }
+
+  .hero-media {
+    display: block;
+  }
+
+  .hero-media img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: #e7e2dc;
+  }
+
+  .editorial-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    padding: 2rem 0 3rem;
+    border-top: 1px solid #d8d0c7;
+    border-bottom: 1px solid #d8d0c7;
+  }
+
+  .latest {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.4fr) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    padding-top: 3rem;
+  }
+
+  .section-heading {
+    display: grid;
+    align-content: start;
+    gap: 0.6rem;
+  }
+
+  .section-heading h2 {
+    margin: 0;
+    color: #171412;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    font-weight: 500;
+    line-height: 1;
+  }
+
+  .latest-list {
+    display: grid;
+    gap: 1.5rem;
+  }
+
+  @media (max-width: 820px) {
+    .masthead,
+    .hero,
+    .editorial-grid,
+    .latest {
+      grid-template-columns: 1fr;
+    }
+
+    .masthead {
+      display: grid;
+    }
+
+    h1 {
+      max-width: 10ch;
+    }
+  }
+
+  @media (max-width: 520px) {
+    .site-shell {
+      width: min(100% - 1rem, 1180px);
+      padding-top: 1rem;
+    }
+
+    .hero {
+      padding-top: 2rem;
+    }
+  }
+</style>

@@ -1,0 +1,52 @@
+{
+  "videos": [
+    {
+      "id": "dQw4w9WgXcQ",
+      "title": "How ideas move through culture",
+      "channelId": "ted",
+      "publishedAt": "2026-01-12T09:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/dQw4w9WgXcQ/maxresdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=dQw4w9WgXcQ"
+    },
+    {
+      "id": "9bZkp7q19f0",
+      "title": "The design choices behind memorable learning",
+      "channelId": "mit",
+      "publishedAt": "2026-01-09T09:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/9bZkp7q19f0/maxresdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=9bZkp7q19f0"
+    },
+    {
+      "id": "3JZ_D3ELwOQ",
+      "title": "A practical guide to better public systems",
+      "channelId": "stanford",
+      "publishedAt": "2026-01-05T09:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/3JZ_D3ELwOQ/maxresdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=3JZ_D3ELwOQ"
+    },
+    {
+      "id": "L_jWHffIx5E",
+      "title": "Why attention is the new civic infrastructure",
+      "channelId": "ted",
+      "publishedAt": "2025-12-28T09:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/L_jWHffIx5E/maxresdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=L_jWHffIx5E"
+    },
+    {
+      "id": "kJQP7kiw5Fk",
+      "title": "What cities can learn from small rituals",
+      "channelId": "urban-lab",
+      "publishedAt": "2025-12-21T09:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/kJQP7kiw5Fk/maxresdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=kJQP7kiw5Fk"
+    },
+    {
+      "id": "RgKAFK5djSk",
+      "title": "The hidden patterns of creative teams",
+      "channelId": "rsa",
+      "publishedAt": "2025-12-14T09:00:00.000Z",
+      "thumbnail": "https://i.ytimg.com/vi/RgKAFK5djSk/maxresdefault.jpg",
+      "url": "https://www.youtube.com/watch?v=RgKAFK5djSk"
+    }
+  ]
+}
