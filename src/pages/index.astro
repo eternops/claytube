@@ -5,9 +5,37 @@ import videosData from "../../data/videos.json";
 import type { VideosData } from "../data/types";
 
 const { videos } = videosData as VideosData;
-const [leadVideo, ...remainingVideos] = videos;
+const sortedVideos = [...videos].sort((left, right) => {
+  const byDate = right.publishedAt.localeCompare(left.publishedAt);
+
+  if (byDate !== 0) {
+    return byDate;
+  }
+
+  return left.id.localeCompare(right.id);
+});
+const [leadVideo, ...remainingVideos] = sortedVideos;
 const featuredVideos = remainingVideos.slice(0, 2);
 const latestVideos = remainingVideos.slice(2);
+
+const formatChannelName = (channelId: string) => {
+  if (!channelId.includes("-") && channelId.length <= 3) {
+    return channelId.toUpperCase();
+  }
+
+  return channelId
+    .split("-")
+    .filter(Boolean)
+    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+    .join(" ");
+};
+
+const formatPublishedDate = (publishedAt: string) =>
+  new Intl.DateTimeFormat("en", {
+    month: "long",
+    day: "numeric",
+    year: "numeric"
+  }).format(new Date(publishedAt));
 ---
 
 <BaseLayout
@@ -25,7 +53,9 @@ const latestVideos = remainingVideos.slice(2);
         <>
           <section class="hero" aria-labelledby="featured-title">
             <div class="hero-copy">
-              <p class="section-label">Featured</p>
+              <p class="section-label">
+                {formatChannelName(leadVideo.channelId)} / {formatPublishedDate(leadVideo.publishedAt)}
+              </p>
               <h1 id="featured-title">{leadVideo.title}</h1>
               <a href={leadVideo.url}>Watch now</a>
             </div>
