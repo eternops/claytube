@@ -215,19 +215,23 @@ function parseChannelReference(
   channelUrl: string
 ): { kind: "handle" | "id" | "query" | "username"; value: string } {
   let url: URL;
+  const normalizedUrl = normalizeChannelUrl(channelUrl);
 
   try {
-    url = new URL(channelUrl);
+    url = new URL(normalizedUrl);
   } catch {
     throw new YouTubeApiError(`Invalid YouTube channel URL: ${channelUrl}`);
   }
 
   const hostname = url.hostname.replace(/^www\./, "");
-  if (hostname !== "youtube.com" && hostname !== "m.youtube.com") {
+  if (hostname !== "youtube.com" && !hostname.endsWith(".youtube.com")) {
     throw new YouTubeApiError(`Invalid YouTube channel URL: ${channelUrl}`);
   }
 
-  const segments = url.pathname.split("/").filter(Boolean);
+  const segments = url.pathname
+    .split("/")
+    .filter(Boolean)
+    .map((segment) => decodeURIComponent(segment));
   const firstSegment = segments[0];
   const secondSegment = segments[1];
 
@@ -247,7 +251,41 @@ function parseChannelReference(
     return { kind: "query", value: secondSegment };
   }
 
+  if (firstSegment && !RESERVED_YOUTUBE_PATHS.has(firstSegment)) {
+    return { kind: "query", value: firstSegment };
+  }
+
   throw new YouTubeApiError(`Unsupported YouTube channel URL: ${channelUrl}`);
+}
+
+const RESERVED_YOUTUBE_PATHS = new Set([
+  "about",
+  "account",
+  "clip",
+  "embed",
+  "feed",
+  "gaming",
+  "hashtag",
+  "live",
+  "playlist",
+  "post",
+  "results",
+  "shorts",
+  "watch"
+]);
+
+function normalizeChannelUrl(channelUrl: string): string {
+  const trimmed = channelUrl.trim();
+
+  if (trimmed.startsWith("@")) {
+    return `https://www.youtube.com/${trimmed}`;
+  }
+
+  if (/^(?:www\.|m\.|music\.)?youtube\.com\//i.test(trimmed)) {
+    return `https://${trimmed}`;
+  }
+
+  return trimmed;
 }
 
 function pickThumbnail(thumbnails: YouTubeThumbnails | undefined): string {

@@ -30,6 +30,8 @@ export async function syncYouTubeData(config: ClayTubeConfig): Promise<SyncResul
     throw new YouTubeApiError("YOUTUBE_API_KEY environment variable is required");
   }
 
+  await writeJson("data/videos.json", { videos });
+
   for (const channelUrl of uniqueChannelUrls) {
     const resolved = await resolveYouTubeChannel(channelUrl, apiKey);
     const channelVideos = await fetchLatestVideos(
