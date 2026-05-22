@@ -3,13 +3,18 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
+  "bin": {
+    "claytube": "./bin/claytube.mjs"
+  },
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
-    "preview": "astro preview"
+    "preview": "astro preview",
+    "sync": "tsx src/cli/index.ts sync"
   },
   "dependencies": {
     "astro": "^5.0.0",
+    "tsx": "^4.20.0",
     "yaml": "^2.6.1"
   },
   "devDependencies": {

@@ -20,38 +20,49 @@ const latestVideos = remainingVideos.slice(2);
       <p>Curated talks, lectures, and field notes.</p>
     </header>
 
-    <section class="hero" aria-labelledby="featured-title">
-      <div class="hero-copy">
-        <p class="section-label">Featured</p>
-        <h1 id="featured-title">{leadVideo.title}</h1>
-        <a href={leadVideo.url}>Watch now</a>
-      </div>
-      <a href={leadVideo.url} class="hero-media" aria-label={`Watch ${leadVideo.title}`}>
-        <img src={leadVideo.thumbnail} alt="" />
-      </a>
-    </section>
+    {
+      leadVideo ? (
+        <>
+          <section class="hero" aria-labelledby="featured-title">
+            <div class="hero-copy">
+              <p class="section-label">Featured</p>
+              <h1 id="featured-title">{leadVideo.title}</h1>
+              <a href={leadVideo.url}>Watch now</a>
+            </div>
+            <a
+              href={leadVideo.url}
+              class="hero-media"
+              aria-label={`Watch ${leadVideo.title}`}
+            >
+              <img src={leadVideo.thumbnail} alt="" />
+            </a>
+          </section>
 
-    <section class="editorial-grid" aria-label="Selected videos">
-      {
-        featuredVideos.map((video) => (
-          <VideoCard video={video} />
-        ))
-      }
-    </section>
+          <section class="editorial-grid" aria-label="Selected videos">
+            {featuredVideos.map((video) => (
+              <VideoCard video={video} />
+            ))}
+          </section>
 
-    <section class="latest" aria-labelledby="latest-title">
-      <div class="section-heading">
-        <p class="section-label">Latest</p>
-        <h2 id="latest-title">Recently added</h2>
-      </div>
-      <div class="latest-list">
-        {
-          latestVideos.map((video) => (
-            <VideoCard video={video} variant="compact" />
-          ))
-        }
-      </div>
-    </section>
+          <section class="latest" aria-labelledby="latest-title">
+            <div class="section-heading">
+              <p class="section-label">Latest</p>
+              <h2 id="latest-title">Recently added</h2>
+            </div>
+            <div class="latest-list">
+              {latestVideos.map((video) => (
+                <VideoCard video={video} variant="compact" />
+              ))}
+            </div>
+          </section>
+        </>
+      ) : (
+        <section class="empty-state" aria-labelledby="empty-title">
+          <p class="section-label">No videos</p>
+          <h1 id="empty-title">Add channels and run sync.</h1>
+        </section>
+      )
+    }
   </main>
 </BaseLayout>
 
@@ -96,6 +107,14 @@ const latestVideos = remainingVideos.slice(2);
     gap: clamp(1.5rem, 4vw, 4rem);
     align-items: end;
     padding: clamp(2.5rem, 7vw, 6rem) 0 clamp(2rem, 5vw, 4rem);
+  }
+
+  .empty-state {
+    display: grid;
+    gap: 1rem;
+    min-height: 60vh;
+    align-content: center;
+    padding: clamp(3rem, 8vw, 7rem) 0;
   }
 
   .hero-copy {
