@@ -1,4 +1,5 @@
 site:
   title: ClayTube
+  description: Static video portal generated from YouTube channels.
 
 channels: []
