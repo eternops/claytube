@@ -1,12 +1,12 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
-import type { ClayTubeConfig } from "../config/loadConfig";
-import type { Channel, ChannelsData, Video, VideosData } from "../data/types";
+import type { ClayTubeConfig } from "../config/loadConfig.js";
+import type { Channel, ChannelsData, Video, VideosData } from "../data/types.js";
 import {
   fetchLatestVideos,
   resolveYouTubeChannel,
   YouTubeApiError
-} from "../youtube/client";
+} from "../youtube/client.js";
 
 export interface SyncResult {
   channels: Channel[];

@@ -1,4 +1,4 @@
-import type { Channel, Video } from "../data/types";
+import type { Channel, Video } from "../data/types.js";
 
 const YOUTUBE_API_BASE_URL = "https://www.googleapis.com/youtube/v3";
 const MAX_VIDEOS_PER_CHANNEL = 12;
