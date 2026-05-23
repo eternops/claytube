@@ -1,77 +1,146 @@
 # ClayTube
 
-**Turn YouTube channels into static video portals.**
+Turn YouTube channels into your own curated video website.
 
-ClayTube는 YouTube 채널 목록을 입력하면
-자동으로 동기화되는 정적 영상 포털을 생성하는 CLI 도구입니다.
-
-TED.com 스타일의 영상 큐레이션 사이트를
-서버 없이 빠르게 구축할 수 있습니다.
+ClayTube is a static site generator for building TED-style video portals from YouTube channels.
 
 ---
 
-## Core Idea
+## Quick Start
 
-Input:
+### 1. Create a new site
 
-- YouTube channel URLs
+```bash
+npx claytube init my-site
+cd my-site
+npm install
+```
+
+---
+
+### 2. Add your YouTube channels
+
+Edit:
+
+```text
+claytube.config.yaml
+```
+
+Example:
+
+```yaml
+site:
+  title: My Learning Hub
+  description: Curated educational videos
+
+channels:
+  - https://www.youtube.com/@TED
+  - https://www.youtube.com/@3blue1brown
+```
+
+ClayTube supports:
+
+- `https://youtube.com/@handle`
+- `https://youtube.com/channel/UC...`
+- `https://youtube.com/c/...`
+- `https://youtube.com/user/...`
+
+---
+
+### 3. Add your YouTube API key
+
+Create:
+
+```text
+.env
+```
+
+Contents:
+
+```bash
+YOUTUBE_API_KEY=your_api_key_here
+```
+
+---
+
+### 4. Fetch videos
+
+```bash
+npm run sync
+```
+
+This updates:
+
+```text
+data/channels.json
+data/videos.json
+```
+
+---
+
+### 5. Preview locally
+
+```bash
+npm run dev
+```
+
+Open:
+
+```text
+http://localhost:4321
+```
+
+---
+
+### 6. Build static site
+
+```bash
+npm run build
+```
 
 Output:
 
-- static website
-- `data/channels.json`
-- `data/videos.json`
-- GitHub Pages deployment
+```text
+dist/
+```
+
+Deploy `dist/` to GitHub Pages.
 
 ---
 
-## Features
+## What ClayTube Does
 
-- multi-channel sync
-- scheduled updates
-- static site generation
-- TED-style layout
-- zero backend
-- GitHub Pages friendly
+- Import videos from one or more YouTube channels
+- Generate a clean editorial website
+- Auto-update with GitHub Actions
+- Deploy free on GitHub Pages
 
 ---
 
 ## Commands
 
 ```bash
-npx claytube init my-site
 claytube init
 claytube sync
 claytube build
-claytube deploy
 ```
 
 ---
 
-## GitHub Pages Deployment
+## Project Structure
 
-The GitHub Actions workflow deploys `dist/` to GitHub Pages after running
-`claytube sync` and `astro build`.
-
-Repository setup:
-
-- Add `YOUTUBE_API_KEY` as a GitHub repository secret.
-- Set GitHub Pages source to `GitHub Actions` in the repository settings.
-
----
-
-## For Humans
-
-See:
-
-- docs/PRODUCT.md
-- docs/SPEC.md
-- docs/DESIGN.md
+```text
+claytube.config.yaml
+.env
+data/
+  channels.json
+  videos.json
+src/
+dist/
+```
 
 ---
 
-## For AI
+## License
 
-See:
-
-- AGENTS.md
+MIT
