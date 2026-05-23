@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "dev": "astro dev",
     "sync": "claytube sync",
     "build": "claytube build",
     "format": "prettier --write .",
