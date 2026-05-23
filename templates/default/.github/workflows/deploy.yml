@@ -38,12 +38,12 @@ jobs:
         run: npm ci
 
       - name: Run ClayTube sync
-        run: npm run sync
+        run: npx claytube sync
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
 
       - name: Build ClayTube site
-        run: npm run build:site
+        run: npx claytube build
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
