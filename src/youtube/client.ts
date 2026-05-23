@@ -220,7 +220,7 @@ async function requestYouTube<T>(
   return data;
 }
 
-function parseChannelReference(channelUrl: string): {
+export function parseChannelReference(channelUrl: string): {
   kind: "handle" | "id" | "query" | "username";
   value: string;
 } {
@@ -284,7 +284,7 @@ const RESERVED_YOUTUBE_PATHS = new Set([
   "watch",
 ]);
 
-function normalizeChannelUrl(channelUrl: string): string {
+export function normalizeChannelUrl(channelUrl: string): string {
   const trimmed = channelUrl.trim();
 
   if (trimmed.startsWith("@")) {
