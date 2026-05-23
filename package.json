@@ -22,7 +22,8 @@
     "link": "npm run build:cli && npm link",
     "prepack": "npm run build:cli",
     "preview": "astro preview",
-    "sync": "tsx src/cli/index.ts sync"
+    "sync": "tsx src/cli/index.ts sync",
+    "test": "vitest run"
   },
   "dependencies": {
     "yaml": "^2.6.1"
@@ -42,7 +43,8 @@
     "prettier-plugin-astro": "^0.14.1",
     "tsx": "^4.20.0",
     "typescript": "^5.0.0",
-    "typescript-eslint": "^8.59.4"
+    "typescript-eslint": "^8.59.4",
+    "vitest": "^2.1.0"
   },
   "bundleDependencies": [
     "yaml"
