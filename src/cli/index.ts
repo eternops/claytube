@@ -3,7 +3,7 @@
 import "dotenv/config";
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { cp, mkdir, readdir } from "node:fs/promises";
+import { cp, mkdir, readdir, writeFile } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -25,7 +25,7 @@ async function main(): Promise<void> {
   }
 
   if (command === "build") {
-    buildSite(args.slice(1));
+    await buildSite(args.slice(1));
     return;
   }
 
@@ -66,7 +66,17 @@ async function sync(args: string[]): Promise<void> {
   );
 }
 
-function buildSite(args: string[]): void {
+async function buildSite(args: string[]): Promise<void> {
+  const configPath = readOption(args, "--config") ?? "claytube.config.yaml";
+  const buildArgs: string[] = [];
+  for (let i = 0; i < args.length; i++) {
+    if (args[i] === "--config") {
+      i++;
+      continue;
+    }
+    buildArgs.push(args[i]);
+  }
+
   const require = createRequire(join(process.cwd(), "package.json"));
   let astroPackagePath: string;
 
@@ -79,13 +89,32 @@ function buildSite(args: string[]): void {
   }
 
   const astroBinPath = join(dirname(astroPackagePath), "astro.js");
-  const result = spawnSync(process.execPath, [astroBinPath, "build", ...args], {
-    env: process.env,
-    stdio: "inherit",
-  });
+  const result = spawnSync(
+    process.execPath,
+    [astroBinPath, "build", ...buildArgs],
+    {
+      env: process.env,
+      stdio: "inherit",
+    },
+  );
 
   if (result.error) {
     throw result.error;
+  }
+
+  if (result.status === 0) {
+    const config = await loadConfig(configPath);
+    if (config.site.url) {
+      try {
+        const url = new URL(config.site.url);
+        const hostname = url.hostname;
+        if (hostname) {
+          await writeFile(join(process.cwd(), "dist", "CNAME"), hostname);
+        }
+      } catch {
+        // Silently skip if URL is invalid
+      }
+    }
   }
 
   process.exitCode = result.status ?? 1;
