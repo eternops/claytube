@@ -1,0 +1,242 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import VideoCard from "../../components/VideoCard.astro";
+import type { Channel, ChannelsData, Video, VideosData } from "../../data/types";
+
+export async function getStaticPaths() {
+  const [{ existsSync, readFileSync }, { join }, importedVideosData] =
+    await Promise.all([
+      import("node:fs"),
+      import("node:path"),
+      import("../../../data/videos.json")
+    ]);
+  const { videos } = importedVideosData.default as VideosData;
+  const channelsPath = join(process.cwd(), "data", "channels.json");
+  let channels: Channel[] = [];
+
+  if (existsSync(channelsPath)) {
+    const parsed = JSON.parse(
+      readFileSync(channelsPath, "utf-8")
+    ) as ChannelsData;
+    channels = parsed.channels;
+  }
+
+  const formatChannelName = (channelId: string) => {
+    if (!channelId.includes("-") && channelId.length <= 3) {
+      return channelId.toUpperCase();
+    }
+
+    return channelId
+      .split("-")
+      .filter(Boolean)
+      .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+      .join(" ");
+  };
+  const sortVideos = (items: Video[]) => [...items].sort((left, right) => {
+    const byDate = right.publishedAt.localeCompare(left.publishedAt);
+
+    if (byDate !== 0) {
+      return byDate;
+    }
+
+    return left.id.localeCompare(right.id);
+  });
+
+  const channelIds = new Set([
+    ...channels.map((channel) => channel.id),
+    ...videos.map((video) => video.channelId)
+  ]);
+
+  return [...channelIds].sort().map((channelId) => {
+    const channelVideos = sortVideos(
+      videos.filter((video) => video.channelId === channelId)
+    );
+    const channel = channels.find((item) => item.id === channelId);
+
+    return {
+      params: { slug: channelId },
+      props: {
+        channel: {
+          id: channelId,
+          title: channel?.title ?? formatChannelName(channelId),
+          thumbnail: channel?.thumbnail ?? channelVideos[0]?.thumbnail ?? "",
+          url: channel?.url ?? ""
+        },
+        videos: channelVideos
+      }
+    };
+  });
+}
+
+interface Props {
+  channel: Channel;
+  videos: Video[];
+}
+
+const { channel, videos: channelVideos } = Astro.props;
+const videoCountLabel =
+  channelVideos.length === 1 ? "1 video" : `${channelVideos.length} videos`;
+---
+
+<BaseLayout
+  title={`${channel.title} - ClayTube`}
+  description={`Latest videos from ${channel.title}.`}
+>
+  <main class="site-shell">
+    <nav class="masthead" aria-label="Site">
+      <a href="/" class="brand">ClayTube</a>
+      <a href="/" class="home-link">Latest videos</a>
+    </nav>
+
+    <header class="channel-header">
+      {
+        channel.thumbnail ? (
+          <img src={channel.thumbnail} alt="" class="channel-thumbnail" />
+        ) : null
+      }
+      <div class="channel-copy">
+        <p class="section-label">Channel</p>
+        <h1>{channel.title}</h1>
+      </div>
+    </header>
+
+    <section class="videos" aria-labelledby="videos-title">
+      <div class="section-heading">
+        <p class="section-label">{videoCountLabel}</p>
+        <h2 id="videos-title">All videos</h2>
+      </div>
+      <div class="video-grid">
+        {channelVideos.map((video) => <VideoCard video={video} />)}
+      </div>
+    </section>
+  </main>
+</BaseLayout>
+
+<style>
+  .site-shell {
+    width: min(100% - 2rem, 1180px);
+    margin: 0 auto;
+    padding: 1.5rem 0 4rem;
+  }
+
+  .masthead {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 1.5rem;
+    padding: 0.75rem 0 1.5rem;
+    border-bottom: 1px solid #d8d0c7;
+  }
+
+  .brand {
+    color: #171412;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    line-height: 1;
+    text-decoration: none;
+  }
+
+  .home-link {
+    color: #171412;
+    font-size: 0.85rem;
+    font-weight: 800;
+    text-decoration: none;
+    border-bottom: 2px solid #d71920;
+  }
+
+  .channel-header {
+    display: grid;
+    grid-template-columns: minmax(10rem, 22rem) minmax(0, 1fr);
+    gap: clamp(1.5rem, 4vw, 4rem);
+    align-items: end;
+    padding: clamp(2.5rem, 7vw, 6rem) 0 clamp(2rem, 5vw, 4rem);
+  }
+
+  .channel-thumbnail {
+    display: block;
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    background: #e7e2dc;
+  }
+
+  .channel-copy {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .section-label {
+    margin: 0;
+    color: #77706a;
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  h1,
+  h2 {
+    margin: 0;
+    color: #171412;
+    font-family: Georgia, "Times New Roman", serif;
+    font-weight: 500;
+  }
+
+  h1 {
+    max-width: 11ch;
+    font-size: clamp(3.2rem, 8vw, 7.5rem);
+    line-height: 0.92;
+  }
+
+  h2 {
+    font-size: clamp(1.8rem, 3vw, 3rem);
+    line-height: 1;
+  }
+
+  .videos {
+    display: grid;
+    gap: 1.5rem;
+    padding-top: 2rem;
+    border-top: 1px solid #d8d0c7;
+  }
+
+  .section-heading {
+    display: grid;
+    gap: 0.6rem;
+  }
+
+  .video-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+  }
+
+  @media (max-width: 900px) {
+    .channel-header,
+    .video-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .site-shell {
+      width: min(100% - 1rem, 1180px);
+      padding-top: 1rem;
+    }
+
+    .masthead,
+    .channel-header,
+    .video-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .masthead {
+      display: grid;
+    }
+
+    h1 {
+      max-width: 10ch;
+    }
+  }
+</style>

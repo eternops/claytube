@@ -17,6 +17,7 @@ Create a new ClayTube project.
 
 ```bash
 claytube init my-site
+claytube init my-site --git
 ```
 
 Creates:
@@ -24,8 +25,12 @@ Creates:
 ```text
 my-site/
   claytube.config.yaml
-  content/
-  public/
+  data/
+    channels.json
+    videos.json
+  src/
+  astro.config.mjs
+  package.json
 ```
 
 ---

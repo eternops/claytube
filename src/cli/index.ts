@@ -1,14 +1,22 @@
 #!/usr/bin/env node
 
 import { spawnSync } from "node:child_process";
+import { existsSync } from "node:fs";
+import { cp, mkdir, readdir } from "node:fs/promises";
 import { createRequire } from "node:module";
-import { dirname, join } from "node:path";
+import { dirname, join, resolve } from "node:path";
+import { fileURLToPath } from "node:url";
 import { loadConfig } from "../config/loadConfig.js";
 import { syncYouTubeData } from "../sync/syncYouTubeData.js";
 
 async function main(): Promise<void> {
   const args = process.argv.slice(2);
   const command = args[0];
+
+  if (command === "init") {
+    await initProject(args.slice(1));
+    return;
+  }
 
   if (command === "sync") {
     await sync(args);
@@ -20,7 +28,31 @@ async function main(): Promise<void> {
     return;
   }
 
-  throw new Error("Usage: claytube <sync|build> [options]");
+  throw new Error("Usage: claytube <init|sync|build> [options]");
+}
+
+async function initProject(args: string[]): Promise<void> {
+  const targetArg = args.find((arg) => !arg.startsWith("-")) ?? ".";
+  const targetDir = resolve(targetArg);
+  const shouldInitGit = args.includes("--git");
+
+  if (existsSync(targetDir)) {
+    const entries = await readdir(targetDir);
+
+    if (entries.length > 0) {
+      throw new Error(`${targetDir} is not empty`);
+    }
+  } else {
+    await mkdir(targetDir, { recursive: true });
+  }
+
+  await copyTemplate(findTemplateDir(), targetDir);
+
+  if (shouldInitGit) {
+    initGit(targetDir);
+  }
+
+  console.log(`Created ClayTube project at ${targetDir}`);
 }
 
 async function sync(args: string[]): Promise<void> {
@@ -47,6 +79,51 @@ function buildSite(args: string[]): void {
   }
 
   process.exitCode = result.status ?? 1;
+}
+
+function initGit(cwd: string): void {
+  const result = spawnSync("git", ["init"], {
+    cwd,
+    env: process.env,
+    stdio: "inherit"
+  });
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  if (result.status !== 0) {
+    throw new Error("git init failed");
+  }
+}
+
+async function copyTemplate(templateDir: string, targetDir: string): Promise<void> {
+  const entries = await readdir(templateDir);
+
+  await Promise.all(
+    entries.map((entry) =>
+      cp(join(templateDir, entry), join(targetDir, entry), {
+        recursive: true,
+        errorOnExist: true,
+        force: false
+      })
+    )
+  );
+}
+
+function findTemplateDir(): string {
+  const candidates = [
+    new URL("../../templates/default/", import.meta.url),
+    new URL("../../../templates/default/", import.meta.url)
+  ].map((url) => fileURLToPath(url));
+
+  const templateDir = candidates.find((candidate) => existsSync(candidate));
+
+  if (!templateDir) {
+    throw new Error("ClayTube project template is missing");
+  }
+
+  return templateDir;
 }
 
 function readOption(args: string[], name: string): string | undefined {

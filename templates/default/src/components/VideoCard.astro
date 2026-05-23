@@ -1,0 +1,96 @@
+---
+import type { Video } from "../data/types";
+
+interface Props {
+  video: Video;
+  variant?: "standard" | "compact";
+}
+
+const { video, variant = "standard" } = Astro.props;
+const channelName =
+  !video.channelId.includes("-") && video.channelId.length <= 3
+    ? video.channelId.toUpperCase()
+    : video.channelId
+        .split("-")
+        .filter(Boolean)
+        .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
+        .join(" ");
+const publishedDate = new Intl.DateTimeFormat("en", {
+  month: "short",
+  day: "numeric",
+  year: "numeric"
+}).format(new Date(video.publishedAt));
+---
+
+<article class:list={["video-card", variant]}>
+  <a href={video.url} class="card-link" aria-label={`Watch ${video.title}`}>
+    <img src={video.thumbnail} alt="" loading="lazy" />
+    <div class="video-copy">
+      <p>{channelName} / {publishedDate}</p>
+      <h2>{video.title}</h2>
+    </div>
+  </a>
+</article>
+
+<style>
+  .card-link {
+    display: grid;
+    gap: 1rem;
+    color: inherit;
+    text-decoration: none;
+  }
+
+  .video-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    background: #e7e2dc;
+  }
+
+  .video-copy {
+    display: grid;
+    gap: 0.35rem;
+  }
+
+  p {
+    margin: 0;
+    color: #77706a;
+    font-family: Arial, sans-serif;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin: 0;
+    color: #171412;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.2rem, 2vw, 1.7rem);
+    font-weight: 500;
+    line-height: 1.08;
+  }
+
+  .card-link:hover h2 {
+    text-decoration: underline;
+    text-decoration-thickness: 0.08em;
+    text-underline-offset: 0.16em;
+  }
+
+  .compact .card-link {
+    grid-template-columns: minmax(7rem, 38%) 1fr;
+    align-items: start;
+    gap: 1rem;
+  }
+
+  .compact h2 {
+    font-size: clamp(1rem, 1.4vw, 1.25rem);
+  }
+
+  @media (max-width: 640px) {
+    .compact .card-link {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

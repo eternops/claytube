@@ -1,0 +1,14 @@
+{
+  "name": "claytube-site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "sync": "claytube sync",
+    "build": "claytube build"
+  },
+  "dependencies": {
+    "astro": "^5.0.0",
+    "claytube": "^0.1.0"
+  }
+}
