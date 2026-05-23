@@ -1,0 +1,42 @@
+name: CI Pipeline
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  continuous-integration:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22" # 🟢 Target Node.js version 22
+          cache: "npm" # ⚡ Enable caching to significantly speed up builds
+
+      - name: Install Dependencies
+        run: npm ci # Clean install based on package-lock.json
+
+      # Step 1: Lint & Format Checks
+      - name: Check Code Quality & Formatting
+        run: |
+          npm run lint
+          npx prettier --check .
+
+      # Step 2: Run Tests (Vitest Integration)
+      - name: Run Unit Tests
+        run: npm run test
+
+      # Step 3: Build Test
+      # For React(Vite), a successful static build proves there are no syntax or type errors.
+      - name: Run Build Test
+        run: npm run build
+
+      # Step 4: Update Changelog (Add existing actions if needed)
+      # You can append your existing changelog action below to run on push or specific conditions.

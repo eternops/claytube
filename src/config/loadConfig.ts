@@ -18,7 +18,7 @@ export class ConfigError extends Error {
 }
 
 export async function loadConfig(
-  configPath = "claytube.config.yaml"
+  configPath = "claytube.config.yaml",
 ): Promise<ClayTubeConfig> {
   const absolutePath = resolve(configPath);
   const source = await readFile(absolutePath, "utf8");
@@ -39,13 +39,15 @@ function validateConfig(value: unknown, sourcePath: string): ClayTubeConfig {
 
   const title = site.title;
   if (typeof title !== "string" || title.trim() === "") {
-    throw new ConfigError(`${sourcePath}: site.title must be a non-empty string`);
+    throw new ConfigError(
+      `${sourcePath}: site.title must be a non-empty string`,
+    );
   }
 
   const description = site.description;
   if (typeof description !== "string" || description.trim() === "") {
     throw new ConfigError(
-      `${sourcePath}: site.description must be a non-empty string`
+      `${sourcePath}: site.description must be a non-empty string`,
     );
   }
 
@@ -57,7 +59,7 @@ function validateConfig(value: unknown, sourcePath: string): ClayTubeConfig {
   for (const [index, channel] of channels.entries()) {
     if (typeof channel !== "string" || channel.trim() === "") {
       throw new ConfigError(
-        `${sourcePath}: channels[${index}] must be a non-empty string`
+        `${sourcePath}: channels[${index}] must be a non-empty string`,
       );
     }
   }
@@ -65,9 +67,9 @@ function validateConfig(value: unknown, sourcePath: string): ClayTubeConfig {
   return {
     site: {
       title: title.trim(),
-      description: description.trim()
+      description: description.trim(),
     },
-    channels: channels.map((channel) => channel.trim())
+    channels: channels.map((channel) => channel.trim()),
   };
 }
 

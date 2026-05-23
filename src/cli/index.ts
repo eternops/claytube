@@ -61,7 +61,7 @@ async function sync(args: string[]): Promise<void> {
   const result = await syncYouTubeData(config);
 
   console.log(
-    `Synced ${result.channels.length} channel(s) and ${result.videos.length} video(s).`
+    `Synced ${result.channels.length} channel(s) and ${result.videos.length} video(s).`,
   );
 }
 
@@ -73,14 +73,14 @@ function buildSite(args: string[]): void {
     astroPackagePath = require.resolve("astro/package.json");
   } catch {
     throw new Error(
-      "Astro is not installed in this project. Run npm install, then try claytube build again."
+      "Astro is not installed in this project. Run npm install, then try claytube build again.",
     );
   }
 
   const astroBinPath = join(dirname(astroPackagePath), "astro.js");
   const result = spawnSync(process.execPath, [astroBinPath, "build", ...args], {
     env: process.env,
-    stdio: "inherit"
+    stdio: "inherit",
   });
 
   if (result.error) {
@@ -94,7 +94,7 @@ function initGit(cwd: string): void {
   const result = spawnSync("git", ["init"], {
     cwd,
     env: process.env,
-    stdio: "inherit"
+    stdio: "inherit",
   });
 
   if (result.error) {
@@ -106,7 +106,10 @@ function initGit(cwd: string): void {
   }
 }
 
-async function copyTemplate(templateDir: string, targetDir: string): Promise<void> {
+async function copyTemplate(
+  templateDir: string,
+  targetDir: string,
+): Promise<void> {
   const entries = await readdir(templateDir);
 
   await Promise.all(
@@ -114,16 +117,16 @@ async function copyTemplate(templateDir: string, targetDir: string): Promise<voi
       cp(join(templateDir, entry), join(targetDir, entry), {
         recursive: true,
         errorOnExist: true,
-        force: false
-      })
-    )
+        force: false,
+      }),
+    ),
   );
 }
 
 function findTemplateDir(): string {
   const candidates = [
     new URL("../../templates/default/", import.meta.url),
-    new URL("../../../templates/default/", import.meta.url)
+    new URL("../../../templates/default/", import.meta.url),
   ].map((url) => fileURLToPath(url));
 
   const templateDir = candidates.find((candidate) => existsSync(candidate));

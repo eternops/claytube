@@ -5,10 +5,23 @@
   "type": "module",
   "scripts": {
     "sync": "claytube sync",
-    "build": "claytube build"
+    "build": "claytube build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint ."
   },
   "dependencies": {
     "astro": "^5.0.0",
     "claytube": "^0.1.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.0.0",
+    "astro-eslint-parser": "^1.0.0",
+    "eslint": "^9.0.0",
+    "eslint-config-prettier": "^10.0.0",
+    "eslint-plugin-astro": "^1.0.0",
+    "prettier": "^3.0.0",
+    "prettier-plugin-astro": "^0.14.0",
+    "typescript-eslint": "^8.0.0"
   }
 }

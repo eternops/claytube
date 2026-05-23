@@ -1,11 +1,16 @@
 import { mkdir, writeFile } from "node:fs/promises";
 import { dirname } from "node:path";
 import type { ClayTubeConfig } from "../config/loadConfig.js";
-import type { Channel, ChannelsData, Video, VideosData } from "../data/types.js";
+import type {
+  Channel,
+  ChannelsData,
+  Video,
+  VideosData,
+} from "../data/types.js";
 import {
   fetchLatestVideos,
   resolveYouTubeChannel,
-  YouTubeApiError
+  YouTubeApiError,
 } from "../youtube/client.js";
 
 export interface SyncResult {
@@ -13,7 +18,9 @@ export interface SyncResult {
   videos: Video[];
 }
 
-export async function syncYouTubeData(config: ClayTubeConfig): Promise<SyncResult> {
+export async function syncYouTubeData(
+  config: ClayTubeConfig,
+): Promise<SyncResult> {
   const uniqueChannelUrls = [...new Set(config.channels)];
   const channels: Channel[] = [];
   const videos: Video[] = [];
@@ -27,7 +34,9 @@ export async function syncYouTubeData(config: ClayTubeConfig): Promise<SyncResul
 
   const apiKey = process.env.YOUTUBE_API_KEY;
   if (!apiKey) {
-    throw new YouTubeApiError("YOUTUBE_API_KEY environment variable is required");
+    throw new YouTubeApiError(
+      "YOUTUBE_API_KEY environment variable is required",
+    );
   }
 
   await writeJson("data/videos.json", { videos });
@@ -37,7 +46,7 @@ export async function syncYouTubeData(config: ClayTubeConfig): Promise<SyncResul
     const channelVideos = await fetchLatestVideos(
       resolved.channel,
       resolved.uploadsPlaylistId,
-      apiKey
+      apiKey,
     );
 
     channels.push(resolved.channel);
@@ -58,11 +67,11 @@ export async function syncYouTubeData(config: ClayTubeConfig): Promise<SyncResul
 
 async function writeJson(
   filePath: "data/channels.json",
-  data: ChannelsData
+  data: ChannelsData,
 ): Promise<void>;
 async function writeJson(
   filePath: "data/videos.json",
-  data: VideosData
+  data: VideosData,
 ): Promise<void>;
 async function writeJson(filePath: string, data: unknown): Promise<void> {
   await mkdir(dirname(filePath), { recursive: true });

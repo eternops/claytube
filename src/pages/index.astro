@@ -34,7 +34,7 @@ const formatPublishedDate = (publishedAt: string) =>
   new Intl.DateTimeFormat("en", {
     month: "long",
     day: "numeric",
-    year: "numeric"
+    year: "numeric",
   }).format(new Date(publishedAt));
 ---
 
@@ -54,7 +54,8 @@ const formatPublishedDate = (publishedAt: string) =>
           <section class="hero" aria-labelledby="featured-title">
             <div class="hero-copy">
               <p class="section-label">
-                {formatChannelName(leadVideo.channelId)} / {formatPublishedDate(leadVideo.publishedAt)}
+                {formatChannelName(leadVideo.channelId)} /{" "}
+                {formatPublishedDate(leadVideo.publishedAt)}
               </p>
               <h1 id="featured-title">{leadVideo.title}</h1>
               <a href={leadVideo.url}>Watch now</a>

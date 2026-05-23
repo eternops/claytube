@@ -13,14 +13,16 @@ if (existsSync(fileURLToPath(compiledEntry))) {
 } else {
   const require = createRequire(import.meta.url);
   const tsxLoader = require.resolve("tsx");
-  const cliEntry = fileURLToPath(new URL("../src/cli/index.ts", import.meta.url));
+  const cliEntry = fileURLToPath(
+    new URL("../src/cli/index.ts", import.meta.url),
+  );
   const result = spawnSync(
     process.execPath,
     ["--import", tsxLoader, cliEntry, ...process.argv.slice(2)],
     {
       env: process.env,
-      stdio: "inherit"
-    }
+      stdio: "inherit",
+    },
   );
 
   if (result.error) {

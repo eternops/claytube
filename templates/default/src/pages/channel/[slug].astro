@@ -1,14 +1,19 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import VideoCard from "../../components/VideoCard.astro";
-import type { Channel, ChannelsData, Video, VideosData } from "../../data/types";
+import type {
+  Channel,
+  ChannelsData,
+  Video,
+  VideosData,
+} from "../../data/types";
 
 export async function getStaticPaths() {
   const [{ existsSync, readFileSync }, { join }, importedVideosData] =
     await Promise.all([
       import("node:fs"),
       import("node:path"),
-      import("../../../data/videos.json")
+      import("../../../data/videos.json"),
     ]);
   const { videos } = importedVideosData.default as VideosData;
   const channelsPath = join(process.cwd(), "data", "channels.json");
@@ -16,7 +21,7 @@ export async function getStaticPaths() {
 
   if (existsSync(channelsPath)) {
     const parsed = JSON.parse(
-      readFileSync(channelsPath, "utf-8")
+      readFileSync(channelsPath, "utf-8"),
     ) as ChannelsData;
     channels = parsed.channels;
   }
@@ -32,24 +37,25 @@ export async function getStaticPaths() {
       .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
       .join(" ");
   };
-  const sortVideos = (items: Video[]) => [...items].sort((left, right) => {
-    const byDate = right.publishedAt.localeCompare(left.publishedAt);
+  const sortVideos = (items: Video[]) =>
+    [...items].sort((left, right) => {
+      const byDate = right.publishedAt.localeCompare(left.publishedAt);
 
-    if (byDate !== 0) {
-      return byDate;
-    }
+      if (byDate !== 0) {
+        return byDate;
+      }
 
-    return left.id.localeCompare(right.id);
-  });
+      return left.id.localeCompare(right.id);
+    });
 
   const channelIds = new Set([
     ...channels.map((channel) => channel.id),
-    ...videos.map((video) => video.channelId)
+    ...videos.map((video) => video.channelId),
   ]);
 
   return [...channelIds].sort().map((channelId) => {
     const channelVideos = sortVideos(
-      videos.filter((video) => video.channelId === channelId)
+      videos.filter((video) => video.channelId === channelId),
     );
     const channel = channels.find((item) => item.id === channelId);
 
@@ -60,10 +66,10 @@ export async function getStaticPaths() {
           id: channelId,
           title: channel?.title ?? formatChannelName(channelId),
           thumbnail: channel?.thumbnail ?? channelVideos[0]?.thumbnail ?? "",
-          url: channel?.url ?? ""
+          url: channel?.url ?? "",
         },
-        videos: channelVideos
-      }
+        videos: channelVideos,
+      },
     };
   });
 }

@@ -16,6 +16,9 @@
     "build": "npm run build:site && npm run build:cli",
     "build:site": "astro build",
     "build:cli": "tsc -p tsconfig.cli.json && chmod +x dist/cli/cli/index.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
     "link": "npm run build:cli && npm link",
     "prepack": "npm run build:cli",
     "preview": "astro preview",
@@ -28,9 +31,20 @@
     "yaml"
   ],
   "devDependencies": {
+    "@eslint/js": "^10.0.1",
     "@types/node": "^22.0.0",
     "astro": "^5.0.0",
+    "astro-eslint-parser": "^1.4.0",
+    "eslint": "^10.4.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-astro": "^1.7.0",
+    "prettier": "^3.8.3",
+    "prettier-plugin-astro": "^0.14.1",
     "tsx": "^4.20.0",
-    "typescript": "^5.0.0"
-  }
+    "typescript": "^5.0.0",
+    "typescript-eslint": "^8.59.4"
+  },
+  "bundleDependencies": [
+    "yaml"
+  ]
 }

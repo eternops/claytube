@@ -68,7 +68,7 @@ export class YouTubeApiError extends Error {
 
 export async function resolveYouTubeChannel(
   channelUrl: string,
-  apiKey: string
+  apiKey: string,
 ): Promise<ResolvedYouTubeChannel> {
   const reference = parseChannelReference(channelUrl);
 
@@ -87,7 +87,10 @@ export async function resolveYouTubeChannel(
   }
 
   if (reference.kind === "username") {
-    const channel = await fetchChannel({ forUsername: reference.value }, apiKey);
+    const channel = await fetchChannel(
+      { forUsername: reference.value },
+      apiKey,
+    );
     if (channel) {
       return channel;
     }
@@ -98,7 +101,9 @@ export async function resolveYouTubeChannel(
   const channel = await fetchChannel({ id: resolvedChannelId }, apiKey);
 
   if (!channel) {
-    throw new YouTubeApiError(`Unable to resolve YouTube channel: ${channelUrl}`);
+    throw new YouTubeApiError(
+      `Unable to resolve YouTube channel: ${channelUrl}`,
+    );
   }
 
   return channel;
@@ -107,7 +112,7 @@ export async function resolveYouTubeChannel(
 export async function fetchLatestVideos(
   channel: Channel,
   uploadsPlaylistId: string,
-  apiKey: string
+  apiKey: string,
 ): Promise<Video[]> {
   const response = await requestYouTube<YouTubePlaylistItem>(
     "playlistItems",
@@ -115,8 +120,8 @@ export async function fetchLatestVideos(
     {
       part: "snippet,contentDetails",
       playlistId: uploadsPlaylistId,
-      maxResults: String(MAX_VIDEOS_PER_CHANNEL)
-    }
+      maxResults: String(MAX_VIDEOS_PER_CHANNEL),
+    },
   );
 
   return (response.items ?? [])
@@ -136,7 +141,7 @@ export async function fetchLatestVideos(
         channelId: channel.id,
         publishedAt,
         thumbnail: pickThumbnail(item.snippet?.thumbnails),
-        url: `https://www.youtube.com/watch?v=${videoId}`
+        url: `https://www.youtube.com/watch?v=${videoId}`,
       };
     })
     .filter((video): video is Video => video !== undefined);
@@ -147,7 +152,7 @@ async function searchChannelId(query: string, apiKey: string): Promise<string> {
     part: "snippet",
     maxResults: "1",
     q: query,
-    type: "channel"
+    type: "channel",
   });
 
   const channelId = response.items?.[0]?.id?.channelId;
@@ -160,12 +165,16 @@ async function searchChannelId(query: string, apiKey: string): Promise<string> {
 
 async function fetchChannel(
   filter: { id: string } | { forHandle: string } | { forUsername: string },
-  apiKey: string
+  apiKey: string,
 ): Promise<ResolvedYouTubeChannel | undefined> {
-  const response = await requestYouTube<YouTubeChannelItem>("channels", apiKey, {
-    part: "snippet,contentDetails",
-    ...filter
-  });
+  const response = await requestYouTube<YouTubeChannelItem>(
+    "channels",
+    apiKey,
+    {
+      part: "snippet,contentDetails",
+      ...filter,
+    },
+  );
 
   const item = response.items?.[0];
   const id = item?.id;
@@ -181,16 +190,16 @@ async function fetchChannel(
       id,
       title,
       url: `https://www.youtube.com/channel/${id}`,
-      thumbnail: pickThumbnail(item.snippet?.thumbnails)
+      thumbnail: pickThumbnail(item.snippet?.thumbnails),
     },
-    uploadsPlaylistId
+    uploadsPlaylistId,
   };
 }
 
 async function requestYouTube<T>(
   endpoint: string,
   apiKey: string,
-  params: Record<string, string>
+  params: Record<string, string>,
 ): Promise<YouTubeListResponse<T>> {
   const url = new URL(`${YOUTUBE_API_BASE_URL}/${endpoint}`);
   url.searchParams.set("key", apiKey);
@@ -204,16 +213,17 @@ async function requestYouTube<T>(
 
   if (!response.ok) {
     throw new YouTubeApiError(
-      data.error?.message ?? `YouTube API request failed: ${response.status}`
+      data.error?.message ?? `YouTube API request failed: ${response.status}`,
     );
   }
 
   return data;
 }
 
-function parseChannelReference(
-  channelUrl: string
-): { kind: "handle" | "id" | "query" | "username"; value: string } {
+function parseChannelReference(channelUrl: string): {
+  kind: "handle" | "id" | "query" | "username";
+  value: string;
+} {
   let url: URL;
   const normalizedUrl = normalizeChannelUrl(channelUrl);
 
@@ -271,7 +281,7 @@ const RESERVED_YOUTUBE_PATHS = new Set([
   "post",
   "results",
   "shorts",
-  "watch"
+  "watch",
 ]);
 
 function normalizeChannelUrl(channelUrl: string): string {
