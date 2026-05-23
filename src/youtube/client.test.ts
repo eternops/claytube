@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseChannelReference, normalizeChannelUrl } from './client';
+import { parseChannelReference, normalizeChannelUrl } from './client.js';
 
 describe('YouTube URL Normalization', () => {
   it('should normalize @handle input', () => {

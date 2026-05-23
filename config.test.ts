@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { parseConfig } from './config';
+import { parseConfig } from './config.js';
 
 describe('parseConfig', () => {
   it('should load a valid config', () => {
