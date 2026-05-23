@@ -6,6 +6,8 @@ export interface ClayTubeConfig {
   site: {
     title: string;
     description: string;
+    url?: string;
+    base?: string;
   };
   channels: string[];
 }

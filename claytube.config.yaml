@@ -1,5 +1,7 @@
 site:
   title: ClayTube
+  url: https://labs.etern.co.kr
   description: Static video portal generated from YouTube channels.
 
-channels: []
+channels:
+  - https://www.youtube.com/@cable8mm

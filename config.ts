@@ -1,7 +1,7 @@
 import { parse } from "yaml";
 
 export interface Config {
-  site: { title: string; description?: string };
+  site: { title: string; description?: string; url?: string; base?: string };
   channels: string[];
 }
 
