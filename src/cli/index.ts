@@ -31,7 +31,7 @@ async function main(): Promise<void> {
   throw new Error("Usage: claytube <init|sync|build> [options]");
 }
 
-async function initProject(args: string[]): Promise<void> {
+export async function initProject(args: string[]): Promise<void> {
   const targetArg = args.find((arg) => !arg.startsWith("-")) ?? ".";
   const targetDir = resolve(targetArg);
   const shouldInitGit = args.includes("--git");
