@@ -66,8 +66,17 @@ async function sync(args: string[]): Promise<void> {
 }
 
 function buildSite(args: string[]): void {
-  const require = createRequire(import.meta.url);
-  const astroPackagePath = require.resolve("astro/package.json");
+  const require = createRequire(join(process.cwd(), "package.json"));
+  let astroPackagePath: string;
+
+  try {
+    astroPackagePath = require.resolve("astro/package.json");
+  } catch {
+    throw new Error(
+      "Astro is not installed in this project. Run npm install, then try claytube build again."
+    );
+  }
+
   const astroBinPath = join(dirname(astroPackagePath), "astro.js");
   const result = spawnSync(process.execPath, [astroBinPath, "build", ...args], {
     env: process.env,

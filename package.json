@@ -1,7 +1,6 @@
 {
   "name": "claytube",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
   "bin": {
     "claytube": "./bin/claytube.mjs"
@@ -23,12 +22,15 @@
     "sync": "tsx src/cli/index.ts sync"
   },
   "dependencies": {
-    "astro": "^5.0.0",
-    "tsx": "^4.20.0",
     "yaml": "^2.6.1"
   },
+  "bundledDependencies": [
+    "yaml"
+  ],
   "devDependencies": {
     "@types/node": "^22.0.0",
+    "astro": "^5.0.0",
+    "tsx": "^4.20.0",
     "typescript": "^5.0.0"
   }
 }

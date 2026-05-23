@@ -39,6 +39,7 @@ Output:
 ## Commands
 
 ```bash
+npx claytube init my-site
 claytube init
 claytube sync
 claytube build
