@@ -1,7 +1,6 @@
 site:
   title: ClayTube
   url: https://labs.etern.co.kr
-  base: /claytube
   description: Static video portal generated from YouTube channels.
 
 channels:
