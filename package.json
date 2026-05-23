@@ -26,10 +26,12 @@
     "test": "vitest run"
   },
   "dependencies": {
+    "dotenv": "^16.6.1",
     "yaml": "^2.6.1"
   },
   "bundledDependencies": [
-    "yaml"
+    "yaml",
+    "dotenv"
   ],
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -47,6 +49,7 @@
     "vitest": "^2.1.0"
   },
   "bundleDependencies": [
-    "yaml"
+    "yaml",
+    "dotenv"
   ]
 }
