@@ -102,21 +102,6 @@ async function buildSite(args: string[]): Promise<void> {
     throw result.error;
   }
 
-  if (result.status === 0) {
-    const config = await loadConfig(configPath);
-    if (config.site.url) {
-      try {
-        const url = new URL(config.site.url);
-        const hostname = url.hostname;
-        if (hostname) {
-          await writeFile(join(process.cwd(), "dist", "CNAME"), hostname);
-        }
-      } catch {
-        // Silently skip if URL is invalid
-      }
-    }
-  }
-
   process.exitCode = result.status ?? 1;
 }
 
