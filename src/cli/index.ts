@@ -3,7 +3,7 @@
 import "dotenv/config";
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";
-import { cp, mkdir, readdir, writeFile } from "node:fs/promises";
+import { cp, mkdir, readdir } from "node:fs/promises";
 import { createRequire } from "node:module";
 import { dirname, join, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
@@ -67,7 +67,6 @@ async function sync(args: string[]): Promise<void> {
 }
 
 async function buildSite(args: string[]): Promise<void> {
-  const configPath = readOption(args, "--config") ?? "claytube.config.yaml";
   const buildArgs: string[] = [];
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--config") {
