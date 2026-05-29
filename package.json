@@ -14,7 +14,7 @@
   "scripts": {
     "dev": "astro dev",
     "build": "npm run build:site && npm run build:cli",
-    "build:site": "astro build && echo 'labs.etern.co.kr' > dist/CNAME",
+    "build:site": "astro build",
     "build:cli": "tsc -p tsconfig.cli.json && chmod +x dist/cli/cli/index.js",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
