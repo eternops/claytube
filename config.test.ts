@@ -7,11 +7,11 @@ describe("parseConfig", () => {
 site:
   title: My Hub
 channels:
-  - https://www.youtube.com/@TED
+  - https://www.youtube.com/@cable8mm
 `;
     const config = parseConfig(yaml);
     expect(config.site.title).toBe("My Hub");
-    expect(config.channels).toContain("https://www.youtube.com/@TED");
+    expect(config.channels).toContain("https://www.youtube.com/@cable8mm");
   });
 
   it("should throw error on missing channels", () => {

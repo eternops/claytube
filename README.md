@@ -34,7 +34,7 @@ site:
   description: Curated educational videos
 
 channels:
-  - https://www.youtube.com/@TED
+  - https://www.youtube.com/@cable8mm
   - https://www.youtube.com/@3blue1brown
 ```
 
