@@ -45,7 +45,7 @@ Example:
 
 ```yaml
 channels:
-  - https://youtube.com/@TED
+  - https://youtube.com/@cable8mm
   - https://youtube.com/@MITOpenCourseWare
 ```
 

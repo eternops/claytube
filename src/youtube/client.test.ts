@@ -3,23 +3,25 @@ import { parseChannelReference, normalizeChannelUrl } from "./client.js";
 
 describe("YouTube URL Normalization", () => {
   it("should normalize @handle input", () => {
-    expect(normalizeChannelUrl("@TED")).toBe("https://www.youtube.com/@TED");
+    expect(normalizeChannelUrl("@cable8mm")).toBe(
+      "https://www.youtube.com/@cable8mm",
+    );
   });
 
   it("should normalize youtube.com domain input", () => {
-    expect(normalizeChannelUrl("youtube.com/@TED")).toBe(
-      "https://youtube.com/@TED",
+    expect(normalizeChannelUrl("youtube.com/@cable8mm")).toBe(
+      "https://youtube.com/@cable8mm",
     );
   });
 
   it("should parse @handle references", () => {
-    expect(parseChannelReference("@TED")).toEqual({
+    expect(parseChannelReference("@cable8mm")).toEqual({
       kind: "handle",
-      value: "@TED",
+      value: "@cable8mm",
     });
-    expect(parseChannelReference("https://www.youtube.com/@TED")).toEqual({
+    expect(parseChannelReference("https://www.youtube.com/@cable8mm")).toEqual({
       kind: "handle",
-      value: "@TED",
+      value: "@cable8mm",
     });
   });
 

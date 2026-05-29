@@ -42,6 +42,6 @@ site:
   title: My Channel Hub
 
 channels:
-  - https://youtube.com/@ted
+  - https://youtube.com/@cable8mm
   - https://youtube.com/@mit
 ```
